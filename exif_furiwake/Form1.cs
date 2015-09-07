@@ -45,6 +45,7 @@ namespace WindowsFormsApplication1
                     if (System.IO.File.Exists(d)) xFileProcess(d);   //ファイルの場合
                     else if (System.IO.Directory.Exists(d))
                     {
+                        //ディレクトリ内のファイルをすべて取得
                         string[] files = System.IO.Directory.GetFiles(d, "*", System.IO.SearchOption.AllDirectories);
                         foreach (string d2 in files)
                         {
@@ -80,15 +81,27 @@ namespace WindowsFormsApplication1
             //ファイルの移動
             string dstfn = Path.GetFileName(d);
             string dstpathfn = System.IO.Path.Combine(cname, dstfn);
-            xLog(dstpathfn);
-
             
+            if (ext.Equals(".jpg") ||
+                ext.Equals(".JPG") ||
+                ext.Equals(".gif") ||
+                ext.Equals(".GIF") ||
+                ext.Equals(".mov") ||
+                ext.Equals(".MOV") ||
+                ext.Equals(".mp4") ||
+                ext.Equals(".MP4"))
+            {
 
-            //System.IO.File.Copy(d,dstpathfn);
-            FileSystem.CopyFile(d, dstpathfn,UIOption.AllDialogs, UICancelOption.DoNothing);
-            // メッセージ処理を促して表示を更新する
-            Application.DoEvents();
-        }
+                //System.IO.File.Copy(d,dstpathfn);
+                FileSystem.MoveFile(d, dstpathfn, UIOption.AllDialogs, UICancelOption.DoNothing);
+                // メッセージ処理を促して表示を更新する
+                Application.DoEvents();
+                xLog("moved "+dstpathfn);
+            }else{
+                xLog("doesnt move " + dstpathfn);
+            }
+
+         }
         private void xGetExifInfo(string d,out DateTime exiftime,out string cameraname)
         {
             exiftime = DateTime.Now;

@@ -56,19 +56,19 @@ namespace WindowsFormsApplication1
 //                e.Effect = DragDropEffects.Copy;
             }
         }
-        private void xFileProcess(string d)
+        private void xFileProcess(string srcpathfilename)
         {
             string cname="null";
             DateTime ctime=DateTime.Now;
             int changedateflag = 0;
 
             //拡張子を取得
-            string ext = System.IO.Path.GetExtension(d);
+            string ext = System.IO.Path.GetExtension(srcpathfilename);
             
             //exif情報を取得
             if (ext.Equals(".jpg") || ext.Equals(".JPG"))
             {
-                xGetExifInfo(d, out ctime, out cname);
+                xGetExifInfo(srcpathfilename, out ctime, out cname);
                 changedateflag = 1;
             }
             else if (ext.Equals(".gif") || ext.Equals(".GIF"))
@@ -76,11 +76,11 @@ namespace WindowsFormsApplication1
                 cname = "gif";
             }
 
-            xLog(d + " : " + ext + " : " + cname + " : " + ctime.ToString());
+            xLog(srcpathfilename + " : " + ext + " : " + cname + " : " + ctime.ToString());
 
             //ファイルの移動
-            string dstfn = Path.GetFileName(d);
-            string dstpathfn = System.IO.Path.Combine(cname, dstfn);
+            string f_name = Path.GetFileName(srcpathfilename);
+            string dstpathfn = System.IO.Path.Combine(cname, f_name);
             
             if (ext.Equals(".jpg") ||
                 ext.Equals(".JPG") ||
@@ -94,17 +94,17 @@ namespace WindowsFormsApplication1
 
                 //System.IO.File.Copy(d,dstpathfn);
                 //ファイル名が同じ場合、改編する
-                string srcfn = Path.GetFileName(d);
-                if (srcfn.Equals(dstfn))
+                string srcfn = Path.GetFileName(srcpathfilename);
+                if (File.Exists(dstpathfn))
                 {
                     string dstdir = Path.GetDirectoryName(dstpathfn);
                     string dstfnwoext = Path.GetFileNameWithoutExtension(dstpathfn);
                     string dstext = Path.GetExtension(dstpathfn);
                     dstfnwoext += "_";
-                    dstpathfn = Path.Combine(dstdir, dstfnwoext, dstext);
+                    dstpathfn = Path.Combine(dstdir, dstfnwoext+dstext);
                 }
 
-                FileSystem.MoveFile(d, dstpathfn, UIOption.AllDialogs, UICancelOption.DoNothing);
+                FileSystem.MoveFile(srcpathfilename, dstpathfn, UIOption.AllDialogs, UICancelOption.DoNothing);
                 // メッセージ処理を促して表示を更新する
                 Application.DoEvents();
                 xLog("moved "+dstpathfn);

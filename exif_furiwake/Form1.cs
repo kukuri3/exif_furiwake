@@ -93,6 +93,17 @@ namespace WindowsFormsApplication1
             {
 
                 //System.IO.File.Copy(d,dstpathfn);
+                //ファイル名が同じ場合、改編する
+                string srcfn = Path.GetFileName(d);
+                if (srcfn.Equals(dstfn))
+                {
+                    string dstdir = Path.GetDirectoryName(dstpathfn);
+                    string dstfnwoext = Path.GetFileNameWithoutExtension(dstpathfn);
+                    string dstext = Path.GetExtension(dstpathfn);
+                    dstfnwoext += "_";
+                    dstpathfn = Path.Combine(dstdir, dstfnwoext, dstext);
+                }
+
                 FileSystem.MoveFile(d, dstpathfn, UIOption.AllDialogs, UICancelOption.DoNothing);
                 // メッセージ処理を促して表示を更新する
                 Application.DoEvents();
